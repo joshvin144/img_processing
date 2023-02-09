@@ -10,6 +10,9 @@ from icecream import ic
 
 # We may look at the rate of change through the definition of derivative:
 # [f(x + h) - f(x)]/[(x + h) - x] = [f(x + h) - f(x)]/h
+# In vector form, this looks like [-1, 0, 1] multiplied by [xf(x - h), f(x), f(x + h)]
+# What is h?
+# h is the change in x, which is 1 pixel
 
 # We may look at an image as the output of a function
 # Therefore, each pixel represents the output of f(x)

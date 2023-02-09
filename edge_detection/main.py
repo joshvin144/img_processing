@@ -55,9 +55,8 @@ def main():
 	edge_y = derivative_y(SOBEL_Y, gauss_y)
 	gauss_x = derivative_x(GAUSS_X, edge_y)
 
-	np.savetxt("edges.txt", gauss_x)
-
 	if (args.plot):
+		plt.imshow(edge_y)
 		plt.imshow(gauss_x)
 		plt.show()
 
