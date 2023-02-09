@@ -108,3 +108,16 @@ def filter_xy(kernel, img):
 					new_img[row][col] += (kernel[row_idx][col_idx]*img[row + row_idx][col + col_idx])
 
 	return new_img
+
+def add_noise_xy(noise_type, img):
+	img_size_x = img.shape[1] # Number of columns
+	img_size_y = img.shape[0] # Number of rows
+	noisy_img = img
+
+	if ("Gaussian" == noise_type):
+		mean = 0
+		stddev = 1
+		noise = np.random.normal(mean, stddev, (img_size_y, img_size_x))
+		noisy_img += noise
+
+	return noisy_img

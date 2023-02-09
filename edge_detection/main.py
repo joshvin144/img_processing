@@ -11,6 +11,7 @@ from edge_detection_methods import LAPLACIAN_XY
 from edge_detection_methods import filter_x
 from edge_detection_methods import filter_y
 from edge_detection_methods import filter_xy
+from edge_detection_methods import add_noise_xy
 from edge_detection_methods import BLUR_THRESHOLD
 
 # Debug
@@ -28,6 +29,7 @@ path = "./480px-SheppLogan_Phantom.svg.png"
 def create_argument_parser():
 	argument_parser = argparse.ArgumentParser()
 	argument_parser.add_argument("-p", "--plot", action = "store_true")
+	argument_parser.add_argument("-n", "--noise", action = "store_true")
 	return argument_parser
 
 # Define the execution, here
@@ -48,6 +50,10 @@ def main():
 	else:
 		img_xy = img
 
+	if (args.noise):
+		# Add noise to the image to throw off the edge detection
+		img_xy = add_noise_xy("Gaussian", img_xy)
+
 	# Edge detection with the derivative and smoothing
 	# This is equivalent to filtering with a Sobel Kernel
 	# edge_x = filter_x(DERIVATIVE_X, img_xy)
@@ -55,30 +61,16 @@ def main():
 	# edge_y = filter_x(DERIVATIVE_Y, gauss_y)
 	# gauss_x = filter_y(GAUSS_X, edge_y)
 
-    # Blur detection before processing
-	laplace_xy = filter_xy(LAPLACIAN_XY, img_xy)
-	blur = np.var(laplace_xy)
-	ic(blur)
-	if (BLUR_THRESHOLD > blur):
-		print("The image is blurry before processing.\n")
-
 	# Blurring before edge detection using the Laplacian
 	smoothed_x = filter_x(GAUSS_X, img_xy)
 	smoothed_y = filter_y(GAUSS_Y, smoothed_x)
 	# Edge detection using the second derivative
 	laplace_xy = filter_xy(LAPLACIAN_XY, smoothed_y)
 
-	# Blur detection after processing
-	blur = np.var(laplace_xy)
-	ic(blur)
-	if (BLUR_THRESHOLD > blur):
-		print("The image is blurry after processing.\n")
-
 	if (args.plot):
-		plt.imshow(img_xy)
-		plt.show()
-		# plt.imshow(gauss_x)
-		plt.imshow(laplace_xy)
+		fig, axs = plt.subplots(1, 2)
+		axs[0].imshow(img_xy)
+		axs[1].imshow(laplace_xy)
 		plt.show()
 
 	return 0
