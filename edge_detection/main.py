@@ -3,12 +3,12 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimage
-from edge_detection_methods import SOBEL_X
-from edge_detection_methods import SOBEL_Y
+from edge_detection_methods import DERIVATIVE_X
+from edge_detection_methods import DERIVATIVE_Y
 from edge_detection_methods import GAUSS_X
 from edge_detection_methods import GAUSS_Y
-from edge_detection_methods import derivative_x
-from edge_detection_methods import derivative_y
+from edge_detection_methods import filter_x
+from edge_detection_methods import filter_y
 
 # Debug
 from icecream import ic
@@ -45,15 +45,12 @@ def main():
 	else:
 		img_xy = img
 
-    # Edge detection with just the derivative
-	# edge_x = derivative_x(SOBEL_X, img_xy)
-	# edge_y = derivative_y(SOBEL_Y, edge_x)
-
 	# Edge detection with the derivative and smoothing
-	edge_x = derivative_x(SOBEL_X, img_xy)
-	gauss_y = derivative_y(GAUSS_Y, edge_x)
-	edge_y = derivative_y(SOBEL_Y, gauss_y)
-	gauss_x = derivative_x(GAUSS_X, edge_y)
+	# This is equivalent to filtering with a Sobel Kernel
+	edge_x = filter_x(DERIVATIVE_X, img_xy)
+	gauss_y = filter_y(GAUSS_Y, edge_x)
+	edge_y = filter_x(DERIVATIVE_Y, gauss_y)
+	gauss_x = filter_y(GAUSS_X, edge_y)
 
 	if (args.plot):
 		plt.imshow(edge_y)

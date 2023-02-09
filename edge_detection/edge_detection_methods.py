@@ -26,13 +26,13 @@ from icecream import ic
 # A row vector is a derivative with respect to x
 # A column vector is a derivative with respect to y
 
-SOBEL_X = np.array([[-1, 0, 1]], dtype = np.float32)
-SOBEL_Y = np.array([[-1], [0], [1]], dtype = np.float32)
+DERIVATIVE_X = np.array([[-1, 0, 1]], dtype = np.float32)
+DERIVATIVE_Y = np.array([[-1], [0], [1]], dtype = np.float32)
 
 GAUSS_X = np.array([[1, 2, 1]], dtype = np.float32)
 GAUSS_Y = np.array([[1], [2], [1]], dtype = np.float32)
 
-def derivative_x(kernel, img):
+def filter_x(kernel, img):
 	""" kernel: A 2D vector, where the size of the second dimension is 1
 	    img: A 2D image that is already zero padded """
 
@@ -52,7 +52,7 @@ def derivative_x(kernel, img):
 
 	return new_img
 
-def derivative_y(kernel, img):
+def filter_y(kernel, img):
 	""" kernel: A 2D vector, where the size of the first dimension is 1
 	    img: A 2D image that is already zero padded """
 	
