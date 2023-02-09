@@ -42,6 +42,10 @@ LAPLACIAN_XY = np.array([[0, -1, 0],
 	                     [-1, 4, -1],
 	                     [0, -1, 0]], dtype = np.float32)
 
+# For blur detection
+# The variance of a blurred image is less than that of a clear image
+BLUR_THRESHOLD = 0.3
+
 def filter_x(kernel, img):
 	""" kernel: A 2D vector, where the size of the second dimension is 1
 	    img: A 2D image that is already zero padded """
