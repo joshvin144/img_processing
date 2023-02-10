@@ -53,7 +53,8 @@ def main():
 	if (args.noise):
 		# Add noise to the image to throw off the edge detection
 		# img_xy = add_noise_xy("Gaussian", img_xy)
-		img_xy = add_noise_xy("Poisson", img_xy)
+		# img_xy = add_noise_xy("Poisson", img_xy) # Common in X-Ray/CT imaging
+		img_xy = add_noise_xy("Rayleigh", img_xy) # Common in ultrasound imaging
 
 	# Edge detection with the derivative and smoothing
 	# This is equivalent to filtering with a Sobel Kernel
