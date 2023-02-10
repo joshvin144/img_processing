@@ -1,4 +1,4 @@
-# analysis_of_distributions
+# img_processing
 
 # Downloading virtualenv
 python -m pip install virtualenv
