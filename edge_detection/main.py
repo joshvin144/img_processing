@@ -16,7 +16,7 @@ from edge_detection_methods import filter_x
 from edge_detection_methods import filter_y
 from edge_detection_methods import filter_xy
 from edge_detection_methods import add_noise_xy
-from edge_detection_methods import BLUR_THRESHOLD
+from edge_detection_methods import perform_histogram_equalization_xy
 
 # For looking at the distribution of the pixels
 from distributions import Distribution
@@ -63,14 +63,8 @@ def main():
 		# img_xy = add_noise_xy("Poisson", img_xy) # Common in X-Ray/CT imaging
 		img_xy = add_noise_xy("Rayleigh", img_xy) # Common in ultrasound imaging
 
-	# Distribution of pixels
-	# Why look at the distribution of pixels
-	# Firstly, it gives us an idea of image contrast
-	img_distribution = Distribution()
-	img_distribution.mean = np.mean(img_xy)
-	img_distribution.stddev = np.sqrt(np.var(img_xy))
-	img_distribution.samples = img_xy.flatten()
-	img_distribution.sample_size = img_xy.size
+	# Histogram Equalization
+	equalized_img_xy = perform_histogram_equalization_xy(None, img_xy)
 
 	# Edge detection with the derivative and smoothing
 	# This is equivalent to filtering with a Sobel Kernel
@@ -80,16 +74,16 @@ def main():
 	# gauss_x = filter_y(GAUSS_X, edge_y)
 
 	# Blurring before edge detection using the Laplacian
-	smoothed_x = filter_x(GAUSS_X, img_xy)
+	smoothed_x = filter_x(GAUSS_X, equalized_img_xy)
 	smoothed_y = filter_y(GAUSS_Y, smoothed_x)
 	# Edge detection using the second derivative
 	laplace_xy = filter_xy(LAPLACIAN_XY, smoothed_y)
 
 	if (args.plot):
-		img_distribution.plot()
-		fig, axs = plt.subplots(1, 2)
+		fig, axs = plt.subplots(1, 3)
 		axs[0].imshow(img_xy)
-		axs[1].imshow(laplace_xy)
+		axs[1].imshow(equalized_img_xy)
+		axs[2].imshow(laplace_xy)
 		plt.show()
 
 	return 0

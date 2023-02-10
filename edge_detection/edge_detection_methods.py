@@ -3,6 +3,9 @@ import numpy as np
 import scipy
 import matplotlib.pyplot as plt
 
+# For looking at the distribution of the pixels
+from distributions import Distribution
+
 # Debugging
 from icecream import ic
 
@@ -148,4 +151,53 @@ def add_noise_xy(noise_type, img):
 		noise = np.random.rayleigh(scale, (img_size_y, img_size_x))
 		noisy_img = np.multiply(noisy_img, noise)
 	return noisy_img
+
+#### Contrast ####
+
+# Histogram Equalization
+# Histogram equalization is a technique used to improve contrast in an image
+# Note that the histogram of an image is a destructive function
+# You may go from an image to a histogram, but not a histogram to an image
+# Therefore, the argument to perform_histogram_equalization_xy must be the image, itself
+# The histogram of the image must be taken within the function
+def perform_histogram_equalization_xy(placeholder, img):
+	img_size_x = img.shape[1] # Number of columns
+	img_size_y = img.shape[0] # Number of rows
+	equalized_img = np.zeros((img_size_y, img_size_x))
+
+	# Distribution of pixels
+	img_distribution = Distribution()
+	img_distribution.mean = np.mean(img)
+	img_distribution.stddev = np.sqrt(np.var(img))
+	img_distribution.samples = img.flatten()
+	img_distribution.sample_size = img.size
+	# img_distribution.plot()
+
+	hist, bin_edges = np.histogram(img_distribution.samples)
+	# Number of possible intensity values
+	num_intensity_values = hist.shape[0]
+
+	# There is a bin for each possible intensity
+	# From the histogram, you may calculated the PMF at each intensity
+	# Histogram equalization uses the CDF to increase the contrast of the image
+	
+	# Histogram equalization algorithm
+	# Across all of the possible intensity values
+	cdf = 0
+	for n in range(num_intensity_values):
+		cdf += hist[n]/img_distribution.sample_size
+		# Adjust the pixels that have the intensity value
+		for row in range(img_size_y):
+			for col in range(img_size_x):
+				if((bin_edges[n] <= img[row][col]) and (bin_edges[n + 1] > img[row][col])):
+					equalized_img[row][col] = np.floor((num_intensity_values - 1)*cdf)
+
+	equalized_img_distribution = Distribution()
+	equalized_img_distribution.mean = np.mean(equalized_img)
+	equalized_img_distribution.stddev = np.sqrt(np.var(equalized_img))
+	equalized_img_distribution.samples = equalized_img.flatten()
+	equalized_img_distribution.sample_size = equalized_img.size
+	# equalized_img_distribution.plot()
+
+	return equalized_img
 
