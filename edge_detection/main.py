@@ -52,7 +52,8 @@ def main():
 
 	if (args.noise):
 		# Add noise to the image to throw off the edge detection
-		img_xy = add_noise_xy("Gaussian", img_xy)
+		# img_xy = add_noise_xy("Gaussian", img_xy)
+		img_xy = add_noise_xy("Poisson", img_xy)
 
 	# Edge detection with the derivative and smoothing
 	# This is equivalent to filtering with a Sobel Kernel
@@ -78,3 +79,4 @@ def main():
 # There should be no need to touch this
 if (__name__ == "__main__"):
 	_ = main()
+

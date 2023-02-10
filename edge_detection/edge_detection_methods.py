@@ -116,8 +116,13 @@ def add_noise_xy(noise_type, img):
 
 	if ("Gaussian" == noise_type):
 		mean = 0
-		stddev = 1
+		stddev = 0.3
 		noise = np.random.normal(mean, stddev, (img_size_y, img_size_x))
-		noisy_img += noise
-
+	elif ("Poisson" == noise_type):
+		num_events = 1
+		noise = np.random.poisson(num_events, (img_size_y, img_size_x))
+	else:
+		noise = 0
+	noisy_img += noise
 	return noisy_img
+
