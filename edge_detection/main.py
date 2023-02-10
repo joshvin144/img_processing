@@ -1,3 +1,7 @@
+# Set the path, here
+import sys
+sys.path.append("../../statistics/analysis_of_distributions")
+
 # Import all modules required to execute this section of code, here
 import argparse
 import numpy as np
@@ -13,6 +17,9 @@ from edge_detection_methods import filter_y
 from edge_detection_methods import filter_xy
 from edge_detection_methods import add_noise_xy
 from edge_detection_methods import BLUR_THRESHOLD
+
+# For looking at the distribution of the pixels
+from distributions import Distribution
 
 # Debug
 from icecream import ic
@@ -56,6 +63,15 @@ def main():
 		# img_xy = add_noise_xy("Poisson", img_xy) # Common in X-Ray/CT imaging
 		img_xy = add_noise_xy("Rayleigh", img_xy) # Common in ultrasound imaging
 
+	# Distribution of pixels
+	# Why look at the distribution of pixels
+	# Firstly, it gives us an idea of image contrast
+	img_distribution = Distribution()
+	img_distribution.mean = np.mean(img_xy)
+	img_distribution.stddev = np.sqrt(np.var(img_xy))
+	img_distribution.samples = img_xy.flatten()
+	img_distribution.sample_size = img_xy.size
+
 	# Edge detection with the derivative and smoothing
 	# This is equivalent to filtering with a Sobel Kernel
 	# edge_x = filter_x(DERIVATIVE_X, img_xy)
@@ -70,6 +86,7 @@ def main():
 	laplace_xy = filter_xy(LAPLACIAN_XY, smoothed_y)
 
 	if (args.plot):
+		img_distribution.plot()
 		fig, axs = plt.subplots(1, 2)
 		axs[0].imshow(img_xy)
 		axs[1].imshow(laplace_xy)

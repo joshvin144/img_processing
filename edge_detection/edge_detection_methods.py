@@ -27,6 +27,8 @@ from icecream import ic
 # It is important to note that the image indices start at (0,0) in the upper righthand corner and increase to the right and down
 # We orient the filters to match this convention
 
+#### Kernels ####
+
 # The Sobel Kernel
 # The Sobel Kernel is the product of the derivative vector and the Gauss vector
 DERIVATIVE_X = np.array([[-1, 0, 1]], dtype = np.float32)
@@ -42,9 +44,25 @@ LAPLACIAN_XY = np.array([[0, -1, 0],
 	                     [-1, 4, -1],
 	                     [0, -1, 0]], dtype = np.float32)
 
+#### Image Quality ####
+
 # For blur detection
 # The variance of a blurred image is less than that of a clear image
 BLUR_THRESHOLD = 0.3
+
+#### Tester for Filter Functions ####
+
+class Tester(object):
+	def __init__(self, function = None):
+		self.function = function
+
+	def run(self, kernel, img):
+		return self.function(kernel, img)
+
+	def __repr__(self):
+		return "Tester for filter functions"
+
+#### Filter Functions ####
 
 def filter_x(kernel, img):
 	""" kernel: A 2D vector, where the size of the second dimension is 1
@@ -108,6 +126,8 @@ def filter_xy(kernel, img):
 					new_img[row][col] += (kernel[row_idx][col_idx]*img[row + row_idx][col + col_idx])
 
 	return new_img
+
+#### Noise ####
 
 def add_noise_xy(noise_type, img):
 	img_size_x = img.shape[1] # Number of columns
