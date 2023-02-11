@@ -53,14 +53,42 @@ LAPLACIAN_XY = np.array([[0, -1, 0],
 # The variance of a blurred image is less than that of a clear image
 BLUR_THRESHOLD = 0.3
 
+#### Parent Class for Filters ####
+class Filter(object):
+	def __init__(self, kernel = None, function = None):
+		self.kernel = kernel
+		self.function = function
+
+	def run(self, img):
+		filtered_img = self.function(self.kernel, img)
+		return filtered_img
+
+	def __repr__(self):
+		return "Parent Class for Filters"
+
 #### Tester for Filter Functions ####
 
 class Tester(object):
-	def __init__(self, function = None):
-		self.function = function
+	def __init__(self):
+		# Sequence of filters to apply to the image
+		self.sequence = []
 
-	def run(self, kernel, img):
-		return self.function(kernel, img)
+	def add_to_sequence(self, filter_):
+		# Every filter needs a kernel and filter function
+		# This must be set beforehand
+		# Therefore, we pass filter objects to the tester that include a kernel and filter function
+		self.sequence.append(filter_)
+
+	def remove_last_function_from_sequence(self):
+		self.sequence.pop()
+
+	def reset_sequence(self):
+		self.sequence = []
+
+	def run(self, img):
+		for filter_ in self.sequence:
+			img = filter_.run(img)
+		return img
 
 	def __repr__(self):
 		return "Tester for filter functions"
