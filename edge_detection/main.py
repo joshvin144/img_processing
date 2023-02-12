@@ -38,7 +38,8 @@ B = 2
 
 # Path to image
 # path = "./480px-SheppLogan_Phantom.svg.png"
-path = "A-Anterior-view-of-the-heart-longitudinal-cross-section-showing-dilatation-of-both.png"
+# path = "A-Anterior-view-of-the-heart-longitudinal-cross-section-showing-dilatation-of-both.png"
+path = "vangoghmuseum-s0031V1962-800.jpg"
 
 # Add command line arguments, here
 def create_argument_parser():
