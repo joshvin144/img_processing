@@ -188,7 +188,7 @@ def add_noise_xy(noise_type, img):
 # You may go from an image to a histogram, but not a histogram to an image
 # Therefore, the argument to perform_histogram_equalization_xy must be the image, itself
 # The histogram of the image must be taken within the function
-def equalize_histogram_xy(placeholder, img):
+def equalize_histogram_xy(num_bins, img):
 	img_size_x = img.shape[1] # Number of columns
 	img_size_y = img.shape[0] # Number of rows
 	equalized_img = np.zeros((img_size_y, img_size_x))
@@ -201,7 +201,7 @@ def equalize_histogram_xy(placeholder, img):
 	img_distribution.sample_size = img.size
 	# img_distribution.plot()
 
-	hist, bin_edges = np.histogram(img_distribution.samples)
+	hist, bin_edges = np.histogram(img_distribution.samples, num_bins)
 	# Number of possible intensity values
 	num_intensity_values = hist.shape[0]
 
@@ -213,12 +213,16 @@ def equalize_histogram_xy(placeholder, img):
 	# Across all of the possible intensity values
 	cdf = 0
 	for n in range(num_intensity_values):
-		cdf += hist[n]/img_distribution.sample_size
+		pmf = hist[n]/img_distribution.sample_size
+		cdf += pmf
 		# Adjust the pixels that have the intensity value
 		for row in range(img_size_y):
 			for col in range(img_size_x):
 				if((bin_edges[n] <= img[row][col]) and (bin_edges[n + 1] > img[row][col])):
+					# The new intensity of the pixel is the product of the number of intensity values and the CDF
+					# Essentially, this uses the CDF to weight the pixels
 					equalized_img[row][col] = np.floor((num_intensity_values - 1)*cdf)
+	equalized_img /= cdf # Normalize by the CDF
 
 	equalized_img_distribution = Distribution()
 	equalized_img_distribution.mean = np.mean(equalized_img)

@@ -36,6 +36,9 @@ R = 0
 G = 1
 B = 2
 
+# Contrast Enhancement
+NUM_BINS = 256
+
 # Path to image
 # path = "./480px-SheppLogan_Phantom.svg.png"
 # path = "A-Anterior-view-of-the-heart-longitudinal-cross-section-showing-dilatation-of-both.png"
@@ -75,7 +78,7 @@ def main():
 		img_xy = add_noise_xy("Rayleigh", img_xy) # Common in ultrasound imaging
 
 	if (args.equalize):
-		img_xy = equalize_histogram_xy(None, img_xy)
+		img_xy = equalize_histogram_xy(NUM_BINS, img_xy)
 
 	# Gaussian Smoothing
 	gauss_y_filter = Filter(GAUSS_Y, filter_y)
