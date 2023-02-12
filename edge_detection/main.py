@@ -8,8 +8,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimage
 
+# Pre-filtering
 from edge_detection_methods import add_noise_xy
+from edge_detection_methods import equalize_histogram_xy
 
+# Filtering
 from edge_detection_methods import Filter
 from edge_detection_methods import Tester
 
@@ -43,6 +46,7 @@ def create_argument_parser():
 	argument_parser.add_argument("-p", "--plot", action = "store_true")
 	argument_parser.add_argument("-n", "--noise", action = "store_true")
 	argument_parser.add_argument("-s", "--smooth", action = "store_true")
+	argument_parser.add_argument("-e", "--equalize", action = "store_true")
 	return argument_parser
 
 # Define the execution, here
@@ -68,6 +72,9 @@ def main():
 		# img_xy = add_noise_xy("Gaussian", img_xy)
 		# img_xy = add_noise_xy("Poisson", img_xy) # Common in X-Ray/CT imaging
 		img_xy = add_noise_xy("Rayleigh", img_xy) # Common in ultrasound imaging
+
+	if (args.equalize):
+		img_xy = equalize_histogram_xy(None, img_xy)
 
 	# Gaussian Smoothing
 	gauss_y_filter = Filter(GAUSS_Y, filter_y)

@@ -188,7 +188,7 @@ def add_noise_xy(noise_type, img):
 # You may go from an image to a histogram, but not a histogram to an image
 # Therefore, the argument to perform_histogram_equalization_xy must be the image, itself
 # The histogram of the image must be taken within the function
-def perform_histogram_equalization_xy(placeholder, img):
+def equalize_histogram_xy(placeholder, img):
 	img_size_x = img.shape[1] # Number of columns
 	img_size_y = img.shape[0] # Number of rows
 	equalized_img = np.zeros((img_size_y, img_size_x))
