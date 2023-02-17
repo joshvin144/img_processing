@@ -38,7 +38,7 @@ G = 1
 B = 2
 
 # Contrast Enhancement
-NUM_BINS = 256
+NUM_INTENSITY_VALUES = 256 # This is 256 for a uint8
 
 # Path to image
 # path = "./480px-SheppLogan_Phantom.svg.png"
@@ -82,7 +82,7 @@ def main():
 		img_xy = stretch_contrast_xy(255, img_xy)
 
 	if (args.equalize):
-		img_xy = equalize_histogram_xy(NUM_BINS, img_xy)
+		img_xy = equalize_histogram_xy(NUM_INTENSITY_VALUES, img_xy)
 
 	# Gaussian Smoothing
 	gauss_y_filter = Filter(GAUSS_Y, filter_y)

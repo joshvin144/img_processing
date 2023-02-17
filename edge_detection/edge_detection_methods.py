@@ -214,10 +214,11 @@ def equalize_histogram_xy(num_bins, img):
 	img_distribution.stddev = np.sqrt(np.var(img))
 	img_distribution.samples = img.flatten()
 	img_distribution.sample_size = img.size
-	# img_distribution.plot()
+	img_distribution.plot()
 
 	hist, bin_edges = np.histogram(img_distribution.samples, num_bins)
-	# Number of possible intensity values
+	# It is assumed that each bin represents a unique intensity value
+	# Therefore, the number of intensity values is equal to the number of bins
 	num_intensity_values = hist.shape[0]
 
 	# There is a bin for each possible intensity
@@ -226,25 +227,40 @@ def equalize_histogram_xy(num_bins, img):
 	
 	# Histogram equalization algorithm
 	# Across all of the possible intensity values
-	cdf = 0
-	for n in range(num_intensity_values):
-		pmf = hist[n]/img_distribution.sample_size
-		cdf += pmf
-		# Adjust the pixels that have the intensity value
-		for row in range(img_size_y):
-			for col in range(img_size_x):
-				if((bin_edges[n] <= img[row][col]) and (bin_edges[n + 1] > img[row][col])):
-					# The new intensity of the pixel is the product of the number of intensity values and the CDF
-					# Essentially, this uses the CDF to weight the pixels
-					equalized_img[row][col] = np.floor((num_intensity_values - 1)*cdf)
-	equalized_img /= cdf # Normalize by the CDF
+	# cdf = 0
+	# for n in range(num_intensity_values):
+	# 	pmf = hist[n]/img_distribution.sample_size
+	# 	cdf += pmf
+	# 	# Adjust the pixels that have the intensity value
+	# 	for row in range(img_size_y):
+	# 		for col in range(img_size_x):
+	# 			if((bin_edges[n] <= img[row][col]) and (bin_edges[n + 1] > img[row][col])):
+	# 				# The new intensity of the pixel is the product of the number of intensity values and the CDF
+	# 				# Essentially, this uses the CDF to weight the pixels
+	# 				equalized_img[row][col] = np.floor((num_intensity_values - 1)*cdf)
+	# equalized_img /= cdf # Normalize by the CDF
+
+	# Example from CV2
+	# Calculate the CDF
+	cdf = hist.cumsum() # Cumulative sum
+	cdf_norm = cdf*float(hist.max())/cdf.max() # Normalize by the CDF
+	# Mask the array
+	cdf_m = np.ma.masked_equal(cdf,0) # Set the mask to False where-ever the CDF is equal to 0
+	cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min()) # Normalize the pixel intensities
+	cdf = np.ma.filled(cdf_m,0).astype('uint8') # Fill the missing values with 0
+	equalized_img = cdf[img]
 
 	equalized_img_distribution = Distribution()
 	equalized_img_distribution.mean = np.mean(equalized_img)
 	equalized_img_distribution.stddev = np.sqrt(np.var(equalized_img))
 	equalized_img_distribution.samples = equalized_img.flatten()
 	equalized_img_distribution.sample_size = equalized_img.size
-	# equalized_img_distribution.plot()
+	equalized_img_distribution.plot()
 
 	return equalized_img
+
+#### Masking ####
+
+
+#### Segmentation ####
 
