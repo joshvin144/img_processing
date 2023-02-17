@@ -189,11 +189,28 @@ def stretch_contrast_xy(scale, img):
 	img_size_y = img.shape[0] # Number of rows
 	new_img = np.zeros((img_size_y, img_size_x))
 
+	# Distribution of pixels
+	img_distribution = Distribution()
+	img_distribution.mean = np.mean(img)
+	img_distribution.stddev = np.sqrt(np.var(img))
+	img_distribution.samples = img.flatten()
+	img_distribution.sample_size = img.size
+	img_distribution.plot()
+
 	max_ = np.amax(img)
 	min_ = np.amin(img)
+	diff = (max_ - min_)
 	for row in range(img_size_y):
 		for col in range(img_size_x):
-			new_img[row][col] = scale*(img[row][col] - min_)/(max_ - min_)
+			new_img[row][col] = scale*(img[row][col] - min_)/diff
+
+	# Distribution of pixels
+	new_img_distribution = Distribution()
+	new_img_distribution.mean = np.mean(new_img)
+	new_img_distribution.stddev = np.sqrt(np.var(new_img))
+	new_img_distribution.samples = new_img.flatten()
+	new_img_distribution.sample_size = new_img.size
+	new_img_distribution.plot()
 
 	return new_img
 
@@ -236,6 +253,7 @@ def equalize_histogram_xy(num_bins, img):
 		# Adjust the pixels that have the intensity value
 		for row in range(img_size_y):
 			for col in range(img_size_x):
+				# If the pixel intensity is in this bin
 				if((bin_edges[n] <= img[row][col]) and (bin_edges[n + 1] > img[row][col])):
 					# The new intensity of the pixel is the product of the number of intensity values and the CDF
 					# Essentially, this uses the CDF to weight the pixels
