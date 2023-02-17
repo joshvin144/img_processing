@@ -10,6 +10,7 @@ import matplotlib.image as mpimage
 
 # Pre-filtering
 from edge_detection_methods import add_noise_xy
+from edge_detection_methods import stretch_contrast_xy
 from edge_detection_methods import equalize_histogram_xy
 
 # Filtering
@@ -41,7 +42,6 @@ NUM_BINS = 256
 
 # Path to image
 # path = "./480px-SheppLogan_Phantom.svg.png"
-# path = "A-Anterior-view-of-the-heart-longitudinal-cross-section-showing-dilatation-of-both.png"
 path = "vangoghmuseum-s0031V1962-800.jpg"
 
 # Add command line arguments, here
@@ -50,6 +50,7 @@ def create_argument_parser():
 	argument_parser.add_argument("-p", "--plot", action = "store_true")
 	argument_parser.add_argument("-n", "--noise", action = "store_true")
 	argument_parser.add_argument("-s", "--smooth", action = "store_true")
+	argument_parser.add_argument("-c", "--stretch", action = "store_true")
 	argument_parser.add_argument("-e", "--equalize", action = "store_true")
 	return argument_parser
 
@@ -76,6 +77,9 @@ def main():
 		# img_xy = add_noise_xy("Gaussian", img_xy)
 		# img_xy = add_noise_xy("Poisson", img_xy) # Common in X-Ray/CT imaging
 		img_xy = add_noise_xy("Rayleigh", img_xy) # Common in ultrasound imaging
+
+	if (args.stretch):
+		img_xy = stretch_contrast_xy(255, img_xy)
 
 	if (args.equalize):
 		img_xy = equalize_histogram_xy(NUM_BINS, img_xy)

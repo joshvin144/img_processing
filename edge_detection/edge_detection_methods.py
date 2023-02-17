@@ -182,6 +182,21 @@ def add_noise_xy(noise_type, img):
 
 #### Contrast ####
 
+# Contrast Stretching
+# Min-Max stretching
+def stretch_contrast_xy(scale, img):
+	img_size_x = img.shape[1] # Number of columns
+	img_size_y = img.shape[0] # Number of rows
+	new_img = np.zeros((img_size_y, img_size_x))
+
+	max_ = np.amax(img)
+	min_ = np.amin(img)
+	for row in range(img_size_y):
+		for col in range(img_size_x):
+			new_img[row][col] = scale*(img[row][col] - min_)/(max_ - min_)
+
+	return new_img
+
 # Histogram Equalization
 # Histogram equalization is a technique used to improve contrast in an image
 # Note that the histogram of an image is a destructive function
