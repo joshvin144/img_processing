@@ -53,6 +53,9 @@ LAPLACIAN_XY = np.array([[0, -1, 0],
 # The variance of a blurred image is less than that of a clear image
 BLUR_THRESHOLD = 0.3
 
+#### Contrast ####
+NUM_INTENSITY_VALUES = 256
+
 #### Parent Class for Filters ####
 class Filter(object):
 	def __init__(self, kernel = None, function = None):
@@ -231,7 +234,7 @@ def equalize_histogram_xy(num_bins, img):
 	img_distribution.stddev = np.sqrt(np.var(img))
 	img_distribution.samples = img.flatten()
 	img_distribution.sample_size = img.size
-	img_distribution.plot()
+	img_distribution.plot(num_bins)
 
 	hist, bin_edges = np.histogram(img_distribution.samples, num_bins)
 	# It is assumed that each bin represents a unique intensity value
@@ -241,6 +244,7 @@ def equalize_histogram_xy(num_bins, img):
 	# There is a bin for each possible intensity
 	# From the histogram, you may calculated the PMF at each intensity
 	# Histogram equalization uses the CDF to increase the contrast of the image
+	# This technique gives more weight to brighter intensities
 	
 	# Histogram equalization algorithm
 	# Across all of the possible intensity values
@@ -259,6 +263,8 @@ def equalize_histogram_xy(num_bins, img):
 					# Essentially, this uses the CDF to weight the pixels
 					equalized_img[row][col] = np.floor((num_intensity_values - 1)*cdf)
 					# What if we weight by PMF?
+					# The resulting histogram looks much more discrete
+					# equalized_img[row][col] = np.floor((num_intensity_values - 1)*pmf)
 	# equalized_img /= cdf # Normalize by the CDF
 	# The CDF is 1 at it's maximum, so we do not need to divide by it again
 
@@ -277,7 +283,7 @@ def equalize_histogram_xy(num_bins, img):
 	equalized_img_distribution.stddev = np.sqrt(np.var(equalized_img))
 	equalized_img_distribution.samples = equalized_img.flatten()
 	equalized_img_distribution.sample_size = equalized_img.size
-	equalized_img_distribution.plot()
+	equalized_img_distribution.plot(num_bins)
 
 	return equalized_img
 
