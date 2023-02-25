@@ -198,7 +198,7 @@ def stretch_contrast_xy(scale, img):
 	img_distribution.stddev = np.sqrt(np.var(img))
 	img_distribution.samples = img.flatten()
 	img_distribution.sample_size = img.size
-	img_distribution.plot(NUM_INTENSITY_VALUES)
+	img_distribution.histplot(NUM_INTENSITY_VALUES)
 
 	max_ = np.amax(img)
 	min_ = np.amin(img)
@@ -213,7 +213,7 @@ def stretch_contrast_xy(scale, img):
 	new_img_distribution.stddev = np.sqrt(np.var(new_img))
 	new_img_distribution.samples = new_img.flatten()
 	new_img_distribution.sample_size = new_img.size
-	new_img_distribution.plot(NUM_INTENSITY_VALUES)
+	new_img_distribution.histplot(NUM_INTENSITY_VALUES)
 
 	return new_img
 
@@ -234,7 +234,7 @@ def equalize_histogram_xy(num_bins, img):
 	img_distribution.stddev = np.sqrt(np.var(img))
 	img_distribution.samples = img.flatten()
 	img_distribution.sample_size = img.size
-	img_distribution.plot(num_bins)
+	img_distribution.histplot(num_bins)
 
 	hist, bin_edges = np.histogram(img_distribution.samples, num_bins)
 	# It is assumed that each bin represents a unique intensity value
@@ -283,7 +283,7 @@ def equalize_histogram_xy(num_bins, img):
 	equalized_img_distribution.stddev = np.sqrt(np.var(equalized_img))
 	equalized_img_distribution.samples = equalized_img.flatten()
 	equalized_img_distribution.sample_size = equalized_img.size
-	equalized_img_distribution.plot(num_bins)
+	equalized_img_distribution.histplot(num_bins)
 
 	return equalized_img
 
