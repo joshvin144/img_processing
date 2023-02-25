@@ -198,7 +198,7 @@ def stretch_contrast_xy(scale, img):
 	img_distribution.stddev = np.sqrt(np.var(img))
 	img_distribution.samples = img.flatten()
 	img_distribution.sample_size = img.size
-	img_distribution.plot()
+	img_distribution.plot(NUM_INTENSITY_VALUES)
 
 	max_ = np.amax(img)
 	min_ = np.amin(img)
@@ -213,7 +213,7 @@ def stretch_contrast_xy(scale, img):
 	new_img_distribution.stddev = np.sqrt(np.var(new_img))
 	new_img_distribution.samples = new_img.flatten()
 	new_img_distribution.sample_size = new_img.size
-	new_img_distribution.plot()
+	new_img_distribution.plot(NUM_INTENSITY_VALUES)
 
 	return new_img
 
